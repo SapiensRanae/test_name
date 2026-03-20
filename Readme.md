@@ -3,7 +3,7 @@ Simple website built on Django, to create and manage tests
 To run the project, follow these steps:
 1. Clone the repository:
    ```
-   git clone
+   git clone https://github.com/SapiensRanae/test_name.git
     ```
    
 2. Navigate to the project directory:
