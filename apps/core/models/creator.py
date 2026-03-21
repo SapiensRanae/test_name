@@ -1,0 +1,24 @@
+from django.db import models
+
+
+
+
+class Creator(models.Model):
+    # main fields
+
+    email = models.EmailField(unique=True, null=False, blank=False)
+
+
+    #metadata fields
+    createdAt = models.DateTimeField(auto_now_add=True)
+    updatedAt = models.DateTimeField(auto_now=True)
+
+    # connections
+    # ownedQuizzes = models.ManyToManyField(Quiz, blank=True)
+
+    # getters, setters and overwrites
+
+    def __str__(self)-> str:
+        return (
+            f"Creator(id={self.id}, email={self.email}, createdAt={self.createdAt}, updatedAt={self.updatedAt})"
+                )

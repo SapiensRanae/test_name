@@ -11,6 +11,8 @@ class Question(models.Model):
     answerRight = models.TextField()
     answerOptions = models.TextField()  # JSON string of answer options
 
+    maxSecondsPerQuestion = models.IntegerField(default=0)
+
     explanation = models.TextField()  # optional field for additional information
 
     #metadata fields

@@ -8,7 +8,7 @@ WILL BE MOVED TO A SEPARATE APP LATER, BUT FOR NOW IT'S HERE
 
 
 from django.db import models
-from .User import User
+from .creator import Creator
 
 class Gender(models.IntegerChoices):
     NOT_SPECIFIED = 0, 'Not specified'
@@ -20,7 +20,7 @@ class UserProfile(models.Model):
 
     # main fields
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(Creator, on_delete=models.CASCADE)
 
     name = models.CharField(max_length=255)
     surname = models.CharField(max_length=255)
