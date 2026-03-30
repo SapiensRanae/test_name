@@ -7,7 +7,7 @@ class CreatorTest(TestCase):
         self.creator_data ={
             "email": "example@email.com"
         }
-        self.creator = Creator(**self.creator_data)
+        self.creator = Creator.objects.create(**self.creator_data)
 
     def test_create_creator(self):
         saved_creator = Creator.objects.get(id=self.creator.id)

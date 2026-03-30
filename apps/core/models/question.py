@@ -28,7 +28,7 @@ class Question(models.Model):
 
 
     def __str__(self)-> str:
-        return {
+        return (
             f"{self.title}"
             f" (InQuiz={self.InQuiz}, createdAt={self.createdAt}, updatedAt={self.updatedAt})"
-        }
+        )
