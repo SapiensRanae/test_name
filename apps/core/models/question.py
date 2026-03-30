@@ -8,12 +8,17 @@ class Question(models.Model):
     id = models.AutoField(primary_key=True)
 
     title = models.CharField(max_length=255)
-    answerRight = models.TextField()
+
+    #index of answer options
+    answerRight = models.IntegerField()
     answerOptions = models.TextField()  # JSON string of answer options
 
     maxSecondsPerQuestion = models.IntegerField(default=0)
 
     explanation = models.TextField()  # optional field for additional information
+
+    #connections
+    InQuiz = models.ForeignKey('Quiz', on_delete=models.CASCADE, related_name='questions')
 
     #metadata fields
     createdAt = models.DateTimeField(auto_now_add=True)
@@ -21,10 +26,9 @@ class Question(models.Model):
 
     # getters, setters and overwrites
 
-    def setAnswerOptions(self, options):
-        # implement serialization of answer options to JSON string and save it to answerOptions field
-
-        pass
 
     def __str__(self)-> str:
-        return self.title
+        return {
+            f"{self.title}"
+            f" (InQuiz={self.InQuiz}, createdAt={self.createdAt}, updatedAt={self.updatedAt})"
+        }

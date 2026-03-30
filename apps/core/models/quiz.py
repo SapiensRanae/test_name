@@ -1,5 +1,6 @@
 from django.db import models
 from .question import Question
+from .creator import Creator
 
 
 class Quiz(models.Model):
@@ -19,8 +20,9 @@ class Quiz(models.Model):
 
 
     #connections
-    # owner = models.ForeignKey('Creator', on_delete=models.CASCADE)
-    # questions = models.ManyToOneRel(Question)
+    owner = models.ManyToManyField(Creator, blank=True)
+   # questions = models.ManyToManyField(Question, blank=True)
+    # moved to Question with one to many relationship
 
 
     #metadata fields
