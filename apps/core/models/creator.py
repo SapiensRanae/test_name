@@ -14,11 +14,11 @@ class Creator(models.Model):
     updatedAt = models.DateTimeField(auto_now=True)
 
     # connections
-    # ownedQuizzes = models.ManyToManyField(Quiz, blank=True)
+    #ownedQuizzes = models.ManyToManyField(Quiz, blank=True)
 
     # getters, setters and overwrites
 
     def __str__(self)-> str:
         return (
-            f"Creator(id={self.id}, email={self.email}, createdAt={self.createdAt}, updatedAt={self.updatedAt})"
-                )
+            f"{self.email}"
+            f" (createdAt={self.createdAt}, updatedAt={self.updatedAt})")
