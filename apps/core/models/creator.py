@@ -14,6 +14,7 @@ class Creator(models.Model):
     updatedAt = models.DateTimeField(auto_now=True)
 
     # connections
+    #in quiz model
     #ownedQuizzes = models.ManyToManyField(Quiz, blank=True)
 
     # getters, setters and overwrites
