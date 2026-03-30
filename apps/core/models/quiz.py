@@ -20,7 +20,7 @@ class Quiz(models.Model):
 
 
     #connections
-    owner = models.ManyToManyField(Creator, blank=True)
+    creator = models.ManyToManyField(Creator, null=False, blank=False)
    # questions = models.ManyToManyField(Question, blank=True)
     # moved to Question with one to many relationship
 
