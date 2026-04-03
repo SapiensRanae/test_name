@@ -1,0 +1,17 @@
+python --version
+pip install django
+django-admin --version
+django-admin startproject config .
+python manage.py runserver
+Ctrl + C
+
+pip freeze > requirements.txt
+
+#Створення міграцій в проекті
+python manage.py makemigrations
+#Створення міграцій для додатку core
+python manage.py makemigrations core
+#Застосовує міграції до бази, не можна робити для бази з реальними даними
+python manage.py migrate
+
+pip install psycopg2-binary
