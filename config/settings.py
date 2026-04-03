@@ -76,9 +76,28 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'test_name_db',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
+    },
+    # 'default': {
+    #         'ENGINE': 'django.db.backends.mysql',  # Використовуємо MySQL
+    #         'NAME': 'client_service_db',  # Назва БД
+    #         'USER': 'root',  # Ім'я користувача MySQL
+    #         'PASSWORD': 'root',  # Пароль
+    #         'HOST': 'localhost',  # Якщо БД локально
+    #         'PORT': '3306',  # Стандартний порт MySQL
+    #         'OPTIONS': {
+    #             'charset': 'utf8mb4',  # Щоб працювали emoji та спецсимволи
+    #         },
+    #     },
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # },
 }
 
 
