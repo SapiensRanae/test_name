@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Title{% endblock title %}</title>
+    {% block style %}
+        <link rel="stylesheet" href="{% static 'styles.css' %}">
+    {% endblock style %}
+</head>
+<body>
+{# Comment #}
+{% comment %}
+Block Comment
+{% endcomment %}
+<div class="wrapper">
+    <header>
+        {% block header %}
+        {% endblock header %}
+    </header>
+    <main>
+        {% block main %}
+        {% endblock main %}
+    </main>
+    <footer>
+        {% block footer %}
+        {% endblock footer %}
+    </footer>
+</div>
+{% block scripts %}
+{% endblock scripts %}
+</body>
+</html>
