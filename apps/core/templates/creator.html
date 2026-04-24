@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Creator{% endblock title %}
+
+{% block main %}
+<main>
+<div class="container">
+    <form action="{% url "creator" %} " method="post">
+        {% csrf_token %}
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email">
+        <button type="submit" >Save</button>
+    </form>
+</div>
+</main>
+{% endblock main %}
