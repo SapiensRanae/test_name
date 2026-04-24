@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'apps.core',
+    'apps.users'
 ]
 
 MIDDLEWARE = [
@@ -145,3 +146,4 @@ STATICFILES_DIRS=[
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
