@@ -5,12 +5,23 @@
 {% block main %}
 <main>
 <div class="container">
-    <form action="{% url "creator" %} " method="post">
+    <form action="{% url 'creator' %}" method="post">
         {% csrf_token %}
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email">
-        <button type="submit" >Save</button>
+        <input type="email" name="email" placeholder="Email">
+        <button type="submit">Create Creator</button>
     </form>
+<table>
+    <thread>
+        <tr>Email</tr>
+    </thread>
+    <tbody>
+        {% for creator  in creators %}
+        <tr>
+            <td>{{ creator.email }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 </div>
 </main>
 {% endblock main %}

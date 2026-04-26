@@ -1,11 +1,23 @@
 <header>
+    <nav>
+        <ul>
+            <li><a href="{% url 'welcome' %}">Home</a></li>
 
-<nav>
-    <ul>
-        <li><a href=" {% url "welcome" %}">Home</a></li>
-        <li><a href="/error">Error</a></li>
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'users' %}">Users</a></li>
+                <li>
+                    <form method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit">Logout</button>
+                    </form>
+                </li>
+                <li><a href="{% url 'creator' %}">Creator</a></li>
+            {% else %}
+                <li><a href="{% url 'login' %}">Login</a></li>
+                <li><a href="{% url 'register' %}">Register</a></li>
+            {% endif %}
 
-    </ul>
-</nav>
-
+            <li><a href="{% url 'home' %}">About</a></li> <!-- 'home' pattern points to about/ -->
+        </ul>
+    </nav>
 </header>

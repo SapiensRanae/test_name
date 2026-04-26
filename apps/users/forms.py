@@ -6,7 +6,7 @@ from .models import CustomUser
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = CustomUser
-        fields = ('username', 'email', 'avatar', 'password1', 'password2', 'role')
+        fields = ('username', 'email', 'password1', 'password2', 'role')
 
 class CustomUserUpdateForm(UserCreationForm):
     class Meta:
@@ -16,7 +16,7 @@ class CustomUserUpdateForm(UserCreationForm):
         exclude = [
             'created_at',
             'updated_at',
-            'avatar',
+
             'password',
             'password1',
             'password2',

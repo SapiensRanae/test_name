@@ -1,7 +1,9 @@
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+
+
 
 from apps.core.models import Creator
 
@@ -16,7 +18,9 @@ def welcome_view(request):
 
 
 def creator_view(request):
-    if request.method == "POST":
+    errors = {}
+    data = {}
+    if request.method == 'POST':
         data = {
             "email": request.POST.get("email"),
         }
@@ -24,6 +28,10 @@ def creator_view(request):
         creator = Creator(**data)
         creator.full_clean()
         creator.save()
+        return redirect('creator')
+
     except ValidationError as e:
-        error_message = e.message_dict
-    return render(request, 'core/creator.html')
+        errors = e.message_dict
+
+    creators = Creator.objects.all()
+    return render(request, 'creator.html', {"errors": errors, "creators": creators})

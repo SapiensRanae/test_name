@@ -50,6 +50,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+'apps.core.middleware.login_required.LoginRequiredMiddleware',
+    'apps.core.middleware.login_required.RoleAccessMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -147,3 +149,23 @@ STATICFILES_DIRS=[
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# LOGIN
+from apps import users
+
+AUTH_USER_MODEL = 'users.CustomUser'
+LOGIN_REDIRECT_URL = '/'
+# LOGOUT_REDIRECT_URL = '/accounts/logout/'
+# LOGOUT_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/welcome/'
+# login у такому випадку це name
+# LOGIN_URL = 'login'
+LOGIN_URL = '/accounts/login/'
+# LOGIN_EXEMPT_URLS = [
+#     '/welcome/',
+#     '/auth/login/',
+#     '/auth/logout/',
+# ]
+# !!!!!!!!!!!!!!
+LOGIN_EXEMPT_URLS = [
+    '/welcome/',
+]
