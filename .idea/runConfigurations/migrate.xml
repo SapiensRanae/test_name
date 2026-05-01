@@ -6,6 +6,7 @@
     <option name="PARENT_ENVS" value="true" />
     <envs>
       <env name="PYTHONUNBUFFERED" value="1" />
+      <env name="DATABASE_URL" value="postgres://324205d73c8ac2dc912b6eb2a804d4ea5cb4bc4c61c39881596f66b6aff377b2:sk_jG65xnTOUGM3xS9_826_U@db.prisma.io:5432/postgres?sslmode=require" />
     </envs>
     <option name="SDK_HOME" value="" />
     <option name="SDK_NAME" value="Python 3.14 (test_name)" />

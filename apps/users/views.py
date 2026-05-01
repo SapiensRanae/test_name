@@ -8,13 +8,12 @@ from .models import CustomUser
 from apps.core.models import QuizAttempt
 
 
-
 class RegisterView(generic.CreateView):
     form_class = CustomUserCreationForm
     template_name = 'users/register.html'
 
     def form_valid(self, form):
-        response = super().form_valid(form)
+        self.object = form.save()
         login(self.request, self.object)
         return redirect('welcome')
 
@@ -24,7 +23,7 @@ class UsersView(View):
         # Check if user is admin
         if not request.user.is_authenticated or request.user.role != 'admin':
             return redirect('welcome')
-        
+
         user_list = CustomUser.objects.all()
         user_form_list = [CustomUserUpdateForm(instance=user, prefix=str(i)) for i, user in enumerate(user_list)]
         return render(request, 'users/users.html', {
@@ -35,7 +34,7 @@ class UsersView(View):
         # Check if user is admin
         if not request.user.is_authenticated or request.user.role != 'admin':
             return redirect('welcome')
-        
+
         if 'submit_user_update' in request.POST:
             prefix = request.POST.get('submit_user_update')
             user_list = CustomUser.objects.all()
@@ -68,7 +67,8 @@ class MyAttemptsView(View):
         if not request.user.is_authenticated:
             return redirect('login')
 
-        attempts = QuizAttempt.objects.filter(user=request.user, submittedAt__isnull=False).select_related('quiz').order_by('-submittedAt')
+        attempts = QuizAttempt.objects.filter(user=request.user, submittedAt__isnull=False).select_related(
+            'quiz').order_by('-submittedAt')
         return render(request, 'users/my_attempts.html', {
             'attempts': attempts,
         })
@@ -87,4 +87,3 @@ class MyAttemptsView(View):
             'profile': profile,
             'form': form
         })
-
