@@ -34,6 +34,8 @@ class QuizModelTest(TestCase):
         self.assertEqual(saved_quiz.creator.count(), 0)
         self.assertIsNotNone(saved_quiz.createdAt)
         self.assertIsNotNone(saved_quiz.updatedAt)
+        self.assertIsNotNone(saved_quiz.publicToken)
+        self.assertTrue(saved_quiz.publicTokenEnabled)
 
 
 

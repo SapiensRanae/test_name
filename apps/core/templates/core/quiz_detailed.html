@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Quiz Details{% endblock title %}
+
+{% block main %}
+    <main class="page">
+        <section class="stack">
+            <div class="card stack">
+                <div class="page-heading">
+                    <div>
+                        <h1>{{ quiz.title }}</h1>
+                        <p class="muted">Edit the quiz details and manage the linked questions below.</p>
+                    </div>
+                    <div class="actions">
+                        <a class="btn secondary" href="{% url 'quiz' %}">Back</a>
+                        <a class="btn secondary" href="{% url 'quiz_results' quiz.id %}">Results</a>
+                        <a class="btn secondary" href="{% url 'quiz_collaborators' quiz.id %}">Collaborators</a>
+                        <a class="btn danger" href="{% url 'quiz_delete' quiz.id %}">Delete quiz</a>
+                        <a class="btn" href="{% url 'question_create' quiz.id %}">Add question</a>
+                    </div>
+                </div>
+
+                <div class="field full-width">
+                    <label>Public Access Link</label>
+                    <div class="actions">
+                        <button type="button" class="btn secondary" data-copy-button
+                                data-copy-value="{{ request.scheme }}://
+                                        {{ request.get_host }}{% url 'public_quiz_take' quiz.id quiz.publicToken %}"
+                                {% if not quiz.publicTokenEnabled %}disabled{% endif %}>Copy link
+                        </button>
+                    </div>
+                    <div class="actions">
+                        <p class="muted">Access enabled: <strong>{% if quiz.publicTokenEnabled %}Yes{% else %}
+                            No{% endif %}</strong></p>
+                        <form method="post" action="{% url 'quiz_public_toggle' quiz.id %}" class="inline-form">
+                            {% csrf_token %}
+                            <button type="submit" class="btn secondary">{% if quiz.publicTokenEnabled %}Disable
+                                Access{% else %}Enable Access{% endif %}</button>
+                        </form>
+                    </div>
+                    <p class="muted">If disabled, the public link will show 404.</p>
+                </div>
+
+                <form method="post" class="form-grid">
+                    {% csrf_token %}
+                    {{ quiz_form.non_field_errors }}
+                    {% for field in quiz_form %}
+                        <div class="field {% if field.name == 'description' or field.name == 'maxSeconds' or field.name == 'maxSecondsPerQuestion' %}full-width{% endif %}">
+                            {{ field.label_tag }}
+                            {{ field }}
+                            {% if field.name == 'maxSeconds' %}
+                                <p class="muted">0 = no limit for entire quiz</p>
+                            {% elif field.name == 'maxSecondsPerQuestion' %}
+                                <p class="muted">0 = no limit per question</p>
+                            {% endif %}
+                            {{ field.errors }}
+                        </div>
+                    {% endfor %}
+                    <div class="actions full-width">
+                        <button type="submit" class="btn">Save quiz</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card stack">
+                <h2>Questions</h2>
+                <div class="stack">
+                    {% for question in questions %}
+                        <article class="list-item">
+                            <div>
+                                <h3>{{ question.title }}</h3>
+                                <p class="muted">Answer index: {{ question.answerRight }} ·
+                                    Time: {{ question.maxSecondsPerQuestion }}</p>
+                            </div>
+                            <div class="actions">
+                                <a class="btn secondary" href="{% url 'question_detail' quiz.id question.id %}">Open</a>
+                                <a class="btn danger" href="{% url 'question_delete' quiz.id question.id %}">Delete</a>
+                            </div>
+                        </article>
+                    {% empty %}
+                        <p class="empty-state">No questions are attached to this quiz yet.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    </main>
+
+{% endblock main %}

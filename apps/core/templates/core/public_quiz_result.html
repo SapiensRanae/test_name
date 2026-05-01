@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Results{% endblock title %}
+
+{% block main %}
+    <main class="page">
+        <section class="stack">
+            <div class="card stack">
+                <h1>Results</h1>
+                <p class="muted"><strong>{{ takerName }}</strong> · Score: <strong>{{ score }}/{{ maxScore }}</strong>
+                </p>
+
+                <div class="stack">
+                    {% for r in results %}
+                        <div class="card stack {% if r.isCorrect %}correct-border{% else %}incorrect-border{% endif %}">
+                            <h3>{{ forloop.counter }}. {{ r.question }}</h3>
+                            <p>
+                                Your answer: {{ r.selectedText|default:"—" }}
+                                {% if r.isCorrect %}
+                                    <span class="success">· Correct</span>
+                                {% else %}
+                                    <span class="danger">· Incorrect</span>
+                                {% endif %}
+                            </p>
+                            {% if not r.isCorrect %}
+                                <p class="muted">Correct answer: <strong>{{ r.correctText|default:"—" }}</strong></p>
+                            {% endif %}
+                            {% if r.explanation %}
+                                <p class="explanation"><em>Explanation:</em> {{ r.explanation }}</p>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="actions">
+                    <a class="btn secondary" href="{% url 'welcome' %}">Back</a>
+                </div>
+            </div>
+        </section>
+    </main>
+{% endblock main %}
+

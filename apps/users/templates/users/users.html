@@ -1,19 +1,40 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block content %}
-	<h2>Users</h2>
-	<div class="user-container">
-		{% for user_form in user_form_list %}
-			<form method="post">
-				{% csrf_token %}
-				<p>
-					<button type="submit" name="submit_user_delete" value="{{ user_form.prefix }}">✖</button>
-				</p>
-				{{ user_form.as_p }}
-				<p>
-					<button type="submit" name="submit_user_update" value="{{ user_form.prefix }}">💾</button>
-				</p>
-			</form>
-		{% endfor %}
-	</div>
-{% endblock content %}
+{% block main %}
+	<main class="page">
+		<section class="card">
+			<h1>Manage Users</h1>
+			{% if user_form_list %}
+				<div class="users-list">
+					{% for user_form in user_form_list %}
+						<div class="user-item">
+							<form method="post" class="user-form">
+								{% csrf_token %}
+								<div class="form-content">
+									<div class="form-fields">
+										{{ user_form.non_field_errors }}
+										{% for field in user_form %}
+											<div class="form-field">
+												{{ field.label_tag }}
+												{{ field }}
+												{{ field.errors }}
+											</div>
+										{% endfor %}
+									</div>
+									<div class="form-actions">
+										<button type="submit" name="submit_user_update" value="{{ user_form.prefix }}" class="btn btn-save" title="Save changes">Save</button>
+										<button type="submit" name="submit_user_delete" value="{{ user_form.prefix }}" class="btn btn-danger" title="Delete user">Delete</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					{% endfor %}
+				</div>
+			{% else %}
+				<div class="empty-state">
+					<p>No users found.</p>
+				</div>
+			{% endif %}
+		</section>
+	</main>
+{% endblock main %}

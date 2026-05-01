@@ -1,13 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Test Name</title>
-</head>
-<body>
-<div>
-    Hello, this is first page.
+{% extends "base.html" %}
+{% block title %}About{% endblock title %}
 
-</div>
-</body>
-</html>
+{% block main %}
+<main class="page">
+    <section class="card stack">
+        <h1>About this project</h1>
+        <p>This application lets admins manage creators and quizzes, and lets creators or admins view and edit the detailed quiz and question pages.</p>
+    </section>
+</main>
+{% endblock main %}

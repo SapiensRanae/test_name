@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Creators{% endblock title %}
+
+{% block main %}
+<main class="page">
+    <section class="stack">
+        <div class="card stack">
+            <h1>Creators</h1>
+            <form action="{% url 'creator' %}" method="post" class="form-grid">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                <div class="field full-width">
+                    {{ form.email.label_tag }}
+                    {{ form.email }}
+                    {{ form.email.errors }}
+                </div>
+                <div class="actions full-width">
+                    <button type="submit" class="btn">Create creator</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card stack">
+            <h2>Saved creators</h2>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>Created</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for creator in creators %}
+                        <tr>
+                            <td>{{ creator.email }}</td>
+                            <td>{{ creator.createdAt|date:"Y-m-d H:i" }}</td>
+                            <td class="table-actions">
+                                <a class="btn secondary" href="{% url 'creator_detail' creator.id %}">Open</a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="3" class="empty-state">No creators yet.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+{% endblock main %}

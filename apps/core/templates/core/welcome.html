@@ -1,7 +1,36 @@
 {% extends "base.html" %}
-{% load static %}
 {% block title %}Welcome{% endblock title %}
 
 {% block main %}
-<h2>Welcome</h2>
+    <main class="page">
+        <section class="card stack center">
+            <h1>Welcome</h1>
+            {% if user.is_authenticated %}
+                <p>Use the navigation to manage quizzes and view your attempts.</p>
+                {% if quizzes %}
+                    <div class="stack">
+                        {% for quiz in quizzes %}
+                            <div class="card stack">
+                                <h2>{{ quiz.title }}</h2>
+                                {% if quiz.description %}
+                                    <p class="muted">{{ quiz.description }}</p>
+                                {% endif %}
+                                <div class="actions">
+                                    <a class="btn secondary" href="{% url 'quiz_detail' quiz.id %}">Open</a>
+                                    {% if quiz.publicTokenEnabled %}
+                                        <a class="btn" href="{% url 'public_quiz_take' quiz.id quiz.publicToken %}">Take
+                                            Quiz</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="muted">No quizzes yet.</p>
+                {% endif %}
+            {% else %}
+                <p>Login or register, or use a public quiz link if you received one.</p>
+            {% endif %}
+        </section>
+    </main>
 {% endblock main %}

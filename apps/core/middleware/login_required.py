@@ -1,9 +1,6 @@
-from django.shortcuts import redirect
-from django.urls import resolve, Resolver404
 from django.conf import settings
-
 from django.shortcuts import redirect
-from django.urls import resolve, Resolver404
+from django.urls import Resolver404, resolve
 
 EXEMPT_URLS = [
     'login',
@@ -11,13 +8,18 @@ EXEMPT_URLS = [
     'index',
 
     'about_project',
+    'about',
 
     'login',
     'logout',
     'register',
     'welcome',
 
-    'creator'
+    'creator',
+
+    'public_quiz_take',
+    'public_quiz_start',
+    'public_quiz_submit',
 ]
 
 
@@ -41,7 +43,6 @@ class LoginRequiredMiddleware:
             return redirect(f"{settings.LOGIN_URL}?next={request.path}")
 
         return self.get_response(request)
-
 
 
 class RoleAccessMiddleware:

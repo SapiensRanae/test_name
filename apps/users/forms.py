@@ -1,12 +1,19 @@
-# registration/forms.py
 from django.contrib.auth.forms import UserCreationForm
-from .models import CustomUser
+from django import forms
+from .models import CustomUser, UserProfile
 
 
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = CustomUser
-        fields = ('username', 'email', 'password1', 'password2', 'role')
+        fields = ('username', 'email', 'password1', 'password2')
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.role = 'user'
+        if commit:
+            user.save()
+        return user
 
 class CustomUserUpdateForm(UserCreationForm):
     class Meta:
@@ -27,6 +34,14 @@ class CustomUserUpdateForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Очищаємо help_text для кожного поля
         for field_name in ['username', 'password1', 'password2']:
             self.fields[field_name].help_text = ''
+
+
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ('name', 'surname', 'bio', 'gender', 'profilePictureUrl')
+        exclude = ('user', 'createdAt', 'updatedAt')
+
+

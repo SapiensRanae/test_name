@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}My profile{% endblock title %}
+{% block main %}
+<main class="page">
+    <section class="card">
+        <div class="profile-header">
+            <div class="profile-pic-section">
+                {% if profile and profile.profilePictureUrl %}
+                    <img src="{{ profile.profilePictureUrl }}" alt="{{ user.username }}" class="profile-form-pic">
+                {% else %}
+                    <div class="profile-pic-large-placeholder">
+                        {% if profile and profile.name %}
+                            {{ profile.name|first|upper }}
+                        {% else %}
+                            {{ user.username|first|upper }}
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="profile-user-info">
+                <h1>{{ profile.name|default:user.username }}</h1>
+                <div class="profile-user-meta">
+                    <span><strong>@{{ user.username }}</strong></span>
+                    <span><strong>Email:</strong> {{ user.email }}</span>
+                    {% if profile %}
+                        <span><strong>Member since:</strong> {{ profile.createdAt|date:"M d, Y" }}</span>
+                        <span><strong>Role:</strong> {{ user.get_role_display }}</span>
+                        {% if profile.surname %}
+                            <span><strong>Surname:</strong> {{ profile.surname }}</span>
+                        {% endif %}
+                        {% if profile.gender != 0 %}
+                            <span><strong>Gender:</strong> {{ profile.get_gender_display }}</span>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% if profile and profile.bio %}
+            <div class="bio-section">
+                <strong class="bio-label">Bio</strong>
+                <p class="bio-text">{{ profile.bio }}</p>
+            </div>
+        {% endif %}
+        <div class="profile-form-container">
+            <h2 class="profile-section-title">Edit profile</h2>
+            <form method="post" class="form-grid">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                <div class="field">
+                    {{ form.name.label_tag }}
+                    {{ form.name }}
+                    {{ form.name.errors }}
+                </div>
+                <div class="field">
+                    {{ form.surname.label_tag }}
+                    {{ form.surname }}
+                    {{ form.surname.errors }}
+                </div>
+                <div class="field">
+                    {{ form.gender.label_tag }}
+                    {{ form.gender }}
+                    {{ form.gender.errors }}
+                </div>
+                <div class="field full-width">
+                    {{ form.bio.label_tag }}
+                    {{ form.bio }}
+                    {{ form.bio.errors }}
+                    <small class="muted form-help-text">Write a short bio about yourself</small>
+                </div>
+                <div class="field full-width">
+                    {{ form.profilePictureUrl.label_tag }}
+                    {{ form.profilePictureUrl }}
+                    {{ form.profilePictureUrl.errors }}
+                    <small class="muted">Paste a direct image URL (e.g., https://example.com/photo.jpg)</small>
+                </div>
+                <div class="actions full-width">
+                    <button type="submit" class="btn">Save profile</button>
+                    <a href="{% url 'welcome' %}" class="btn secondary">Back</a>
+                </div>
+            </form>
+        </div>
+    </section>
+</main>
+{% endblock main %}

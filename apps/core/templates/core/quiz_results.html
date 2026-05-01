@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Results{% endblock title %}
+
+{% block main %}
+    <main class="page">
+        <section class="stack">
+            <div class="card stack">
+                <div class="page-heading">
+                    <div>
+                        <h1>Results: {{ quiz.title }}</h1>
+                        <p class="muted">Attempts submitted for this quiz.</p>
+                    </div>
+                    <div class="actions">
+                        <a class="btn secondary" href="{% url 'quiz_detail' quiz.id %}">Back</a>
+                    </div>
+                </div>
+
+                <table class="data-table">
+                    <thead>
+                    <tr>
+                        <th>When</th>
+                        <th>Name</th>
+                        <th>Score</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for a in attempts %}
+                        <tr>
+                            <td>{{ a.startedAt }}</td>
+                            <td>{{ a.takerName }}</td>
+                            <td>
+                                {% if a.submittedAt %}
+                                    {{ a.score }}/{{ a.maxScore }}
+                                {% else %}
+                                    <span class="muted">In Progress</span>
+                                {% endif %}
+                            </td>
+                            <td class="table-actions">
+                                <a class="btn secondary" href="{% url 'quiz_attempt_detail' quiz.id a.id %}">Open</a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="4" class="empty-state">No attempts yet.</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+{% endblock main %}
+

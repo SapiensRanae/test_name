@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Attempts{% endblock title %}
+
+{% block main %}
+    <main class="page">
+        <section class="stack">
+            <div class="card stack">
+                <h1>All Attempts</h1>
+                <table class="data-table">
+                    <thead>
+                    <tr>
+                        <th>Quiz</th>
+                        <th>Name</th>
+                        <th>User</th>
+                        <th>When</th>
+                        <th>Score</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for a in attempts %}
+                        <tr>
+                            <td>{{ a.quiz.title }}</td>
+                            <td>{{ a.takerName }}</td>
+                            <td>{{ a.user.username|default:"—" }}</td>
+                            <td>{{ a.startedAt }}</td>
+                            <td>
+                                {% if a.submittedAt %}
+                                    {{ a.score }}/{{ a.maxScore }}
+                                {% else %}
+                                    <span class="muted">In Progress</span>
+                                {% endif %}
+                            </td>
+                            <td class="table-actions">
+                                <a class="btn secondary" href="{% url 'attempts_admin_detail' a.id %}">Open</a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="6" class="empty-state">No attempts yet.</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+{% endblock main %}
+

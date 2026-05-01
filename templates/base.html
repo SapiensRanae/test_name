@@ -3,7 +3,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Title{% endblock title %}</title>
+    <link rel="icon" type="image/svg+xml" href="{% static 'favicon.svg' %}">
     {% block style %}
         <link rel="stylesheet" href="{% static 'styles.css' %}">
     {% endblock style %}
@@ -28,6 +30,7 @@ Block Comment
 
 </div>
 {% block scripts %}
+    <script src="{% static 'scripts.js' %}"></script>
 {% endblock scripts %}
 </body>
 </html>

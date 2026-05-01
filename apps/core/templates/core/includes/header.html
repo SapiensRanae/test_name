@@ -1,23 +1,43 @@
-<header>
-    <nav>
-        <ul>
+<header class="site-header card">
+    <nav class="site-nav">
+        <ul class="nav-list">
             <li><a href="{% url 'welcome' %}">Home</a></li>
-
+            <li><a href="{% url 'about' %}">About</a></li>
             {% if user.is_authenticated %}
-                <li><a href="{% url 'users' %}">Users</a></li>
+                <li class="profile-menu">
+                    <a href="{% url 'profile' %}" class="profile-link">
+                        {% if user.profile.profilePictureUrl %}
+                            <img src="{{ user.profile.profilePictureUrl }}" alt="{{ user.username }}"
+                                 class="profile-pic header-avatar">
+                        {% else %}
+                            <div class="profile-pic-placeholder header-avatar">
+                                {% if user.profile.name %}
+                                    {{ user.profile.name|first|upper }}
+                                {% else %}
+                                    {{ user.username|first|upper }}
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                        <span class="profile-name">{{ user.profile.name|default:user.username }}</span>
+                    </a>
+                </li>
+                <li><a href="{% url 'my_attempts' %}">My attempts</a></li>
+                <li><a href="{% url 'quiz' %}">Quizzes</a></li>
+                {% if user.role == 'admin' %}
+                    <li><a href="{% url 'users' %}">Users</a></li>
+                    <li><a href="{% url 'creator' %}">Creators</a></li>
+                    <li><a href="{% url 'attempts_admin_list' %}">Attempts</a></li>
+                {% endif %}
                 <li>
-                    <form method="post" action="{% url 'logout' %}">
+                    <form method="post" action="{% url 'logout' %}" class="inline-form">
                         {% csrf_token %}
                         <button type="submit">Logout</button>
                     </form>
                 </li>
-                <li><a href="{% url 'creator' %}">Creator</a></li>
             {% else %}
                 <li><a href="{% url 'login' %}">Login</a></li>
                 <li><a href="{% url 'register' %}">Register</a></li>
             {% endif %}
-
-            <li><a href="{% url 'home' %}">About</a></li> <!-- 'home' pattern points to about/ -->
         </ul>
     </nav>
 </header>

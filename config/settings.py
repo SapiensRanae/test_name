@@ -1,3 +1,5 @@
+import dj_database_url
+
 """
 Django settings for config project.
 
@@ -9,12 +11,11 @@ https://docs.djangoproject.com/en/6.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
@@ -26,7 +27,6 @@ SECRET_KEY = 'django-insecure-j_%wiv^rsmst1w7g&&@ztd!ssuuu7gxi+li^nexpo^s0k3vfpr
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -50,7 +50,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-'apps.core.middleware.login_required.LoginRequiredMiddleware',
+    'apps.core.middleware.login_required.LoginRequiredMiddleware',
     'apps.core.middleware.login_required.RoleAccessMiddleware',
 ]
 
@@ -73,19 +73,14 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'test_name_db',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
-    },
+    'default': dj_database_url.config(
+        default=os.getenv('DATABASE_URL'),
+        conn_max_age=600
+    )
     # 'default': {
     #         'ENGINE': 'django.db.backends.mysql',  # Використовуємо MySQL
     #         'NAME': 'client_service_db',  # Назва БД
@@ -102,7 +97,6 @@ DATABASES = {
     #     'NAME': BASE_DIR / 'db.sqlite3',
     # },
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
@@ -122,7 +116,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
@@ -134,17 +127,16 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
 
-STATICFILES_DIRS=[
+STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 
-#AutoField is an integer field that automatically increments according to available IDs.
+# AutoField is an integer field that automatically increments according to available IDs.
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -154,9 +146,7 @@ from apps import users
 
 AUTH_USER_MODEL = 'users.CustomUser'
 LOGIN_REDIRECT_URL = '/'
-# LOGOUT_REDIRECT_URL = '/accounts/logout/'
-# LOGOUT_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/welcome/'
+LOGOUT_REDIRECT_URL = '/'
 # login у такому випадку це name
 # LOGIN_URL = 'login'
 LOGIN_URL = '/accounts/login/'
@@ -169,3 +159,8 @@ LOGIN_URL = '/accounts/login/'
 LOGIN_EXEMPT_URLS = [
     '/welcome/',
 ]
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'no-reply@test-name.local'
+
+QUIZ_RESULTS_EMAIL_ENABLED = False

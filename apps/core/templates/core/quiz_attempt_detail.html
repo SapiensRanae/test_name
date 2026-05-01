@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Attempt{% endblock title %}
+
+{% block main %}
+    <main class="page">
+        <section class="stack">
+            <div class="card stack">
+                <div class="page-heading">
+                    <div>
+                        <h1>{{ quiz.title }}</h1>
+                        <p class="muted">
+                            {{ attempt.takerName }} ·
+                            {% if attempt.submittedAt %}
+                                Score: {{ attempt.score }}/{{ attempt.maxScore }} · Submitted: {{ attempt.submittedAt }}
+                            {% else %}
+                                <span class="muted">In Progress</span> · Started: {{ attempt.startedAt }}
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="actions">
+                        <a class="btn secondary" href="{% url 'quiz_results' quiz.id %}">Back</a>
+                    </div>
+                </div>
+
+                <div class="stack">
+                    {% for r in rows %}
+                        <div class="card stack">
+                            <h2>{{ forloop.counter }}. {{ r.question }}</h2>
+                            <p class="muted">
+                                Selected: {{ r.selectedText|default:"—" }}
+                                {% if r.isCorrect %}
+                                    · Correct
+                                {% else %}
+                                    · Incorrect
+                                {% endif %}
+                            </p>
+                            {% if not r.isCorrect %}
+                                <p class="muted">Correct: {{ r.correctText|default:"—" }}</p>
+                            {% endif %}
+                            {% if r.explanation %}
+                                <p>{{ r.explanation }}</p>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    </main>
+{% endblock main %}
+

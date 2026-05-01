@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Delete quiz{% endblock title %}
+
+{% block main %}
+<main class="page">
+    <section class="card stack">
+        <h1>Delete quiz</h1>
+        <p>Are you sure you want to delete "{{ quiz.title }}"?</p>
+        <form method="post" class="actions">
+            {% csrf_token %}
+            <a class="btn secondary" href="{% url 'quiz_detail' quiz.id %}">Cancel</a>
+            <button type="submit" class="btn danger">Delete</button>
+        </form>
+    </section>
+</main>
+{% endblock main %}
+

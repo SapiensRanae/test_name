@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Creator details{% endblock title %}
+
+{% block main %}
+<main class="page">
+    <section class="stack">
+        <div class="card stack">
+            <div class="page-heading">
+                <div>
+                    <h1>{{ creator.email }}</h1>
+                    <p class="muted">Created at {{ creator.createdAt|date:"Y-m-d H:i" }}</p>
+                </div>
+                <div class="actions">
+                    <a class="btn secondary" href="{% url 'creator' %}">Back</a>
+                </div>
+            </div>
+
+            <form method="post" class="form-grid">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                <div class="field full-width">
+                    {{ form.email.label_tag }}
+                    {{ form.email }}
+                    {{ form.email.errors }}
+                </div>
+                <div class="actions full-width">
+                    <button type="submit" class="btn">Save creator</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card stack">
+            <h2>Quizzes</h2>
+            {% for quiz in quizzes %}
+                <article class="list-item">
+                    <div>
+                        <h3>{{ quiz.title }}</h3>
+                        <p class="muted">{{ quiz.description|default:"No description" }}</p>
+                    </div>
+                    <a class="btn secondary" href="{% url 'quiz_detail' quiz.id %}">Open</a>
+                </article>
+            {% empty %}
+                <p class="empty-state">This creator does not have quizzes yet.</p>
+            {% endfor %}
+        </div>
+    </section>
+</main>
+{% endblock main %}
+

@@ -1,0 +1,200 @@
+{% extends "base.html" %}
+{% block title %}{{ quiz.title }}{% endblock title %}
+
+{% block main %}
+    <main class="page">
+        <section class="stack">
+            <div class="card stack">
+                <h1>{{ quiz.title }}</h1>
+                {% if quiz.description %}
+                    <p class="muted">{{ quiz.description }}</p>
+                {% endif %}
+
+                <div id="start-screen" class="stack">
+                    <p>Welcome! Please enter your name to start the quiz.</p>
+                    {% if quiz.maxSeconds > 0 %}
+                        <p><strong>Time limit for entire quiz:</strong> {{ quiz.maxSeconds }} seconds</p>
+                    {% endif %}
+                    {% if quiz.maxSecondsPerQuestion > 0 %}
+                        <p><strong>Time limit per question:</strong> {{ quiz.maxSecondsPerQuestion }} seconds</p>
+                    {% endif %}
+                    <div class="field">
+                        <label for="takerNameInput">Your name</label>
+                        <input type="text" id="takerNameInput" placeholder="Enter your name" required>
+                    </div>
+                    <div class="actions">
+                        <button type="button" id="start-btn" class="btn">Start Quiz</button>
+                    </div>
+                </div>
+
+                <form id="quiz-form" method="post" action="{% url 'public_quiz_submit' quiz.id quiz.publicToken %}"
+                      class="stack hidden">
+                    {% csrf_token %}
+                    <input type="hidden" id="takerName" name="takerName">
+                    <input type="hidden" id="attemptId" name="attempt_id">
+
+                    <div id="timer" class="hidden">
+                        <span id="timer-label">Time remaining:</span>
+                        <span id="timer-value">--:--</span>
+                    </div>
+
+                    {% for q in questions %}
+                        <div class="card stack question-card" data-question-id="{{ q.id }}">
+                            <div class="page-heading">
+                                <h2>{{ forloop.counter }}. {{ q.title }}</h2>
+                                {% if quiz.maxSecondsPerQuestion > 0 %}
+                                    <span class="muted">{{ quiz.maxSecondsPerQuestion }}s limit</span>
+                                {% endif %}
+                            </div>
+                            {% for opt in q.options %}
+                                <label class="option">
+                                    <input type="radio" name="q_{{ q.id }}" value="{{ forloop.counter0 }}" required>
+                                    <span>{{ opt }}</span>
+                                </label>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+
+                    <div class="actions">
+                        <button type="submit" class="btn">Submit Quiz</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const startScreen = document.getElementById('start-screen');
+            const quizForm = document.getElementById('quiz-form');
+            const startBtn = document.getElementById('start-btn');
+            const takerNameInput = document.getElementById('takerNameInput');
+            const takerNameHidden = document.getElementById('takerName');
+            const attemptIdHidden = document.getElementById('attemptId');
+            const timerDiv = document.getElementById('timer');
+            const timerValue = document.getElementById('timer-value');
+
+            const maxSeconds = {{ quiz.maxSeconds|default:0 }};
+            let timeRemaining = maxSeconds;
+            let timerInterval;
+
+            const startUrl = "{% url 'public_quiz_start' quiz.id quiz.publicToken %}";
+
+            startBtn.addEventListener('click', function () {
+                const name = takerNameInput.value.trim();
+                if (!name) {
+                    alert('Please enter your name');
+                    return;
+                }
+
+                startBtn.disabled = true;
+                startBtn.textContent = 'Starting...';
+
+                // Call start endpoint
+                const formData = new FormData();
+                formData.append('takerName', name);
+                formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+
+                fetch(startUrl, {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.attempt_id) {
+                            attemptIdHidden.value = data.attempt_id;
+                            takerNameHidden.value = name;
+                            startScreen.classList.add('hidden');
+                            quizForm.classList.remove('hidden');
+
+                            if (maxSeconds > 0) {
+                                timerDiv.classList.remove('hidden');
+                                startTimer();
+                            }
+                        } else {
+                            alert('Error starting quiz: ' + (data.error || 'Unknown error'));
+                            startBtn.disabled = false;
+                            startBtn.textContent = 'Start Quiz';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error starting quiz. Please try again.');
+                        startBtn.disabled = false;
+                        startBtn.textContent = 'Start Quiz';
+                    });
+            });
+
+
+            function startTimer() {
+                updateTimerDisplay();
+                timerInterval = setInterval(function () {
+                    timeRemaining--;
+                    updateTimerDisplay();
+
+                    if (timeRemaining <= 10) {
+                        timerDiv.classList.add('warning');
+                    }
+
+                    if (timeRemaining <= 0) {
+                        clearInterval(timerInterval);
+                        alert('Time is up! Submitting your answers.');
+                        quizForm.submit();
+                    }
+                }, 1000);
+            }
+
+            function updateTimerDisplay() {
+                const minutes = Math.floor(timeRemaining / 60);
+                const seconds = timeRemaining % 60;
+                timerValue.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }
+        });
+    </script>
+
+    <style>
+        .hidden {
+            display: none !important;
+        }
+
+        #timer {
+            font-size: 1.2rem;
+            font-weight: bold;
+            padding: 12px 16px;
+            background: var(--soft);
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid var(--border);
+        }
+
+        #timer.warning {
+            color: var(--danger);
+            background: #fff1f2;
+            border-color: var(--danger);
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .option:hover {
+            background: var(--soft);
+        }
+
+        .option input {
+            width: auto;
+            min-height: auto;
+        }
+    </style>
+{% endblock main %}
+

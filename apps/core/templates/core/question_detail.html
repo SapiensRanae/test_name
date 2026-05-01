@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Question details{% endblock title %}
+
+{% block main %}
+<main class="page">
+    <section class="card stack">
+        <div class="page-heading">
+            <div>
+                <h1>{{ question.title }}</h1>
+                <p class="muted">Quiz: {{ quiz.title }}</p>
+            </div>
+            <div class="actions">
+                <a class="btn secondary" href="{% url 'quiz_detail' quiz.id %}">Back</a>
+                <a class="btn danger" href="{% url 'question_delete' quiz.id question.id %}">Delete</a>
+            </div>
+        </div>
+
+        <form method="post" class="form-grid">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <div class="field full-width">
+                {{ form.title.label_tag }}
+                {{ form.title }}
+                {{ form.title.errors }}
+            </div>
+            <div class="field full-width">
+                {{ form.answerOptionsText.label_tag }}
+                {{ form.answerOptionsText }}
+                <p class="muted">Write one option per line. The first line is index 0, second is 1, etc. Max 6 options.</p>
+                {{ form.answerOptionsText.errors }}
+            </div>
+            <div class="field">
+                {{ form.answerRight.label_tag }}
+                {{ form.answerRight }}
+                <p class="muted">Correct option index (0 to 5).</p>
+                {{ form.answerRight.errors }}
+            </div>
+            <div class="field">
+                {{ form.maxSecondsPerQuestion.label_tag }}
+                {{ form.maxSecondsPerQuestion }}
+                {{ form.maxSecondsPerQuestion.errors }}
+            </div>
+            <div class="field full-width">
+                {{ form.explanation.label_tag }}
+                {{ form.explanation }}
+                {{ form.explanation.errors }}
+            </div>
+            <div class="actions full-width">
+                <button type="submit" class="btn">Save question</button>
+            </div>
+        </form>
+    </section>
+</main>
+{% endblock main %}
+

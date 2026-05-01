@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}Quizzes{% endblock title %}
+{% block main %}
+    <main class="page">
+        <section class="stack">
+            <div class="card stack">
+                <h1>Quizzes</h1>
+                <form action="{% url 'quiz' %}" method="post" class="form-grid">
+                    {% csrf_token %}
+                    {{ form.non_field_errors }}
+                    <div class="field full-width">
+                        {{ form.title.label_tag }}
+                        {{ form.title }}
+                        {{ form.title.errors }}
+                    </div>
+                    <div class="field full-width">
+                        {{ form.description.label_tag }}
+                        {{ form.description }}
+                        {{ form.description.errors }}
+                    </div>
+                    <div class="field">
+                        {{ form.maxSeconds.label_tag }}
+                        {{ form.maxSeconds }}
+                        <p class="muted">Total quiz time (0 = no limit)</p>
+                        {{ form.maxSeconds.errors }}
+                    </div>
+                    <div class="field">
+                        {{ form.maxSecondsPerQuestion.label_tag }}
+                        {{ form.maxSecondsPerQuestion }}
+                        <p class="muted">Time per question (0 = no limit)</p>
+                        {{ form.maxSecondsPerQuestion.errors }}
+                    </div>
+                    <div class="field">
+                        {{ form.publicTokenEnabled.label_tag }}
+                        {{ form.publicTokenEnabled }}
+                        {{ form.publicTokenEnabled.errors }}
+                    </div>
+                    <div class="actions full-width">
+                        <button type="submit" class="btn">Create quiz</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card stack">
+                <h2>Saved quizzes</h2>
+                <table class="data-table">
+                    <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Limits (Total / Question)</th>
+                        <th>Public Access</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for quiz in quizzes %}
+                        <tr>
+                            <td>{{ quiz.title }}</td>
+                            <td>{{ quiz.description|default:"—" }}</td>
+                            <td>
+                                {% if quiz.maxSeconds > 0 %}{{ quiz.maxSeconds }}s{% else %}No limit{% endif %} /
+                                {% if quiz.maxSecondsPerQuestion > 0 %}{{ quiz.maxSecondsPerQuestion }}s{% else %}No
+                                    limit{% endif %}
+                            </td>
+                            <td>{% if quiz.publicTokenEnabled %}<span class="success">Enabled</span>{% else %}
+                                <span class="muted">Disabled</span>{% endif %}</td>
+                            <td class="table-actions">
+                                <a class="btn secondary" href="{% url 'quiz_detail' quiz.id %}">Open</a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="4" class="empty-state">No quizzes yet.</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+{% endblock main %}
